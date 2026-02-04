@@ -7,6 +7,9 @@
 # define CEILING 0x1E90FFFF
 # define FLOOR 0x228B22FF
 
+# define FOV 66.0
+# define M_PI 3.14159265358979323846
+
 # define ROTATE 30
 
 #include <MLX42/MLX42.h>
@@ -17,6 +20,15 @@ typedef struct	s_pos
 	int	y;
 }			t_pos;
 
+typedef struct	s_p
+{
+	double	x;
+	double	y;
+	double	dirx;
+	double	diry;
+	double	planex;
+	double	planey;
+}				t_p;
 
 typedef struct s_env
 {
@@ -27,14 +39,6 @@ typedef struct s_env
 	t_p			*player;
 	int			draw;
 }				t_env;
-
-typedef struct	s_p
-{
-	double	x;
-	double	y;
-	double	dirx;
-	double	diry;
-}				t_p;
 
 uint32_t	color(mlx_texture_t *tex, int x, int y);
 void		draw_texture(t_env *env, t_pos *pos);

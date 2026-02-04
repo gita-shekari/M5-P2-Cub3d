@@ -6,6 +6,7 @@
 #include <MLX42/MLX42.h>
 #include <libft.h>
 #include "try.h"
+#include <math.h> // for tan()
 
 int	check_color(int y)
 {
@@ -62,13 +63,34 @@ void	close_func(void *param)
 static void set_player_dir(t_p *p, char c)
 {
     if (c == 'N')
-        (p->dirx = 0, p->diry = -1);
+	{
+		p->dirx = 0;
+		p->diry = -1;
+	}
     else if (c == 'S')
-        (p->dirx = 0, p->diry = 1);
+	{
+		p->dirx = 0; 
+		p->diry = 1;
+	}      
     else if (c == 'E')
-        (p->dirx = 1, p->diry = 0);
+	{
+		p->dirx = 1;
+		p->diry = 0;
+	}
     else if (c == 'W')
-        (p->dirx = -1, p->diry = 0);
+	{
+		p->dirx = -1;
+		p->diry = 0;
+	}
+}
+
+static void	set_player_plane(t_p *p)
+{
+	double	plane_len;
+	
+	plane_len = tan(FOV * M_PI / 180.0);
+	p->planex = ((-1) * p->diry) * (plane_len / 2);
+	p->planey = p->dirx * (plane_len * 2);
 }
 
 void    set_grid(char *map[], t_env *env)
@@ -96,6 +118,7 @@ void    set_grid(char *map[], t_env *env)
                 env->player->x = x + 0.5;
                 env->player->y = y + 0.5;
                 set_player_dir(env->player, map[y][x]);
+				set_player_plane(env->player);
                 map[y][x] = '0';
                 found = 1;
             }
