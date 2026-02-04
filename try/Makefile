@@ -1,11 +1,11 @@
 NAME = try
 
 #dir
-MLX_DIR = ../MLX42
+MLX_DIR = ./MLX42
 LIBFT_DIR = ../libft
 
 #files
-SRC = main.c error.c
+SRC = main.c error.c color.c
 OBJ = $(SRC:%.c=%.o)
 
 #libraies and headers
@@ -33,13 +33,12 @@ endif
 all: buildmlx buildlibft $(NAME)
 
 buildmlx:
-	git submodule update --init --recursive
+	git clone https://github.com/codam-coding-college/MLX42.git
 	cmake $(MLX_DIR) -B $(MLX_DIR)/build
 	cmake --build $(MLX_DIR)/build --parallel 4
 
 buildlibft: 
 	$(MAKE) -C $(LIBFT_DIR)
-
 
 %.o: %.c
 	@$(CC) $(CFLAGS) $(HEADERS) -c $< -o $@
@@ -54,6 +53,7 @@ clean:
 fclean: clean
 	$(MAKE) -C $(LIBFT_DIR) fclean
 	rm -rf $(MLX_DIR)/build
+	rm -rf $(MLX_DIR)
 	rm -f $(NAME)
 
 re: fclean all

@@ -21,9 +21,9 @@ int	check_color(int y)
 	 */
 }
 
-int	pidx(int x, int y)
+int	pidx(int x, int y, int width)
 {
-	return (y * WIDTH + x);
+	return (y * width + x);
 }
 void	set_game(void *param)
 {
@@ -36,22 +36,18 @@ void	set_game(void *param)
 	env = param;
 	y = 0;
 	pixels = (uint32_t *)env->img->pixels;
-	if (env->draw)
+	while (y < HEIGHT)
 	{
-		while (y < HEIGHT)
+		x = 0;
+		while (x < WIDTH)
 		{
-			x = 0;
-			while (x < WIDTH)
-			{
 
-				color = check_color(y);
-				// == mlx_put_pixel(env->img, x, y, color); use the following is faster in performance.
-				pixels[pidx(x, y)] = color;
-				x++;
-			}
-			y++;
+			color = check_color(y);
+			// == mlx_put_pixel(env->img, x, y, color); use the following is faster in performance.
+			pixels[pidx(x, y, WIDTH)] = color;
+			x++;
 		}
-		env->draw = 0;
+		y++;
 	}
 }
 
@@ -63,9 +59,73 @@ void	close_func(void *param)
 	mlx_close_window(env->mlx);
 }
 
+static void set_player_dir(t_p *p, char c)
+{
+    if (c == 'N')
+        (p->dirx = 0, p->diry = -1);
+    else if (c == 'S')
+        (p->dirx = 0, p->diry = 1);
+    else if (c == 'E')
+        (p->dirx = 1, p->diry = 0);
+    else if (c == 'W')
+        (p->dirx = -1, p->diry = 0);
+}
+
+void    set_grid(char *map[], t_env *env)
+{
+    int x;
+    int y;
+    int found;
+
+    env->grid = map;
+    found = 0;
+    y = 0;
+    while (map[y])
+    {
+        x = 0;
+        while (map[y][x])
+        {
+            if (map[y][x] == 'N' || map[y][x] == 'S'
+                || map[y][x] == 'E' || map[y][x] == 'W')
+            {
+                if (found)
+                {
+                    ft_putstr_fd("Error: multiple player start positions\n", 2);
+                    exit(1);
+                }
+                env->player->x = x + 0.5;
+                env->player->y = y + 0.5;
+                set_player_dir(env->player, map[y][x]);
+                map[y][x] = '0';
+                found = 1;
+            }
+            x++;
+        }
+        y++;
+    }
+    if (!found)
+    {
+        ft_putstr_fd("Error: player start position not found\n", 2);
+        exit(1);
+    }
+}
+
+
 int32_t	main(void)
 {
 	t_env	env;
+
+	char *map[] = {
+    "1111111111",
+    "1000000001",
+    "1000110001",
+    "1000100001",
+    "1000N10001",
+    "1000000001",
+    "1111111111",
+    NULL
+	};
+	set_grid(map, &env);
 
 	env.mlx = NULL;
 	env.img = NULL;
@@ -75,17 +135,12 @@ int32_t	main(void)
 	env.img = mlx_new_image(env.mlx, WIDTH, HEIGHT);
 	if (!env.img)
 		ft_error_mlx(&env);
-
-	//mlx_texture_t	*tex = mlx_load_xpm42("../textures/wood.xpm");
-	//int	tex_x = 5, tex_y = 5;
-	//uint32_t color = ((uint32_t *)tex->pixels)[tex_y * tex->width + tex_x];
-
-	// set every pixel to white(int32_t is a pixel type's size);
-	//ft_memset(env->img->pixels, 255, env->img->width * env->img->height * sizeof(int32_t));
+	
+	//	draw_wall(&env);
+	env.tex = mlx_load_xpm42("../textures/wood.xpm");
 	
 	if (mlx_image_to_window(env.mlx, env.img, 0, 0) < 0)
 		ft_error_mlx(&env);
-	env.draw = 1;
 	mlx_loop_hook(env.mlx, set_game, &env);
 	mlx_close_hook(env.mlx, close_func, &env);
 	mlx_loop(env.mlx);
