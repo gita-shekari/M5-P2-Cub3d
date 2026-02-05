@@ -29,27 +29,28 @@ int	pidx(int x, int y, int width)
 void	set_game(void *param)
 {
 	t_env	*env;
-	int		y;
-	int		x;
-	uint32_t	color;
-	uint32_t	*pixels;
+	//int		y;
+	//int		x;
+	//uint32_t	color;
+	//uint32_t	*pixels;
 
 	env = param;
-	y = 0;
-	pixels = (uint32_t *)env->img->pixels;
-	while (y < HEIGHT)
-	{
-		x = 0;
-		while (x < WIDTH)
-		{
+	//y = 0;
+	//pixels = (uint32_t *)env->img->pixels;
+	ft_run_dda(env);
+	//while (y < HEIGHT)
+	//{
+	//	x = 0;
+	//	while (x < WIDTH)
+	//	{
 
-			color = check_color(y);
-			// == mlx_put_pixel(env->img, x, y, color); use the following is faster in performance.
-			pixels[pidx(x, y, WIDTH)] = color;
-			x++;
-		}
-		y++;
-	}
+	//		color = check_color(y);
+	//		// == mlx_put_pixel(env->img, x, y, color); use the following is faster in performance.
+	//		pixels[pidx(x, y, WIDTH)] = color;
+	//		x++;
+	//	}
+	//	y++;
+	//}
 }
 
 void	close_func(void *param)
@@ -148,6 +149,7 @@ int32_t	main(void)
     "1111111111",
     NULL
 	};
+
 	set_grid(map, &env);
 
 	env.mlx = NULL;
@@ -160,13 +162,26 @@ int32_t	main(void)
 		ft_error_mlx(&env);
 	
 	//	draw_wall(&env);
-	env.tex = mlx_load_xpm42("../textures/wood.xpm");
+	env.xpm = malloc(sizeof(xpm_t *) * 4);
+	if (!env.xpm)
+		ft_error_mlx(&env);
+	// later change to this.
+	//int	i = -1;
+	//while (++i < 4)
+	//	env.xpm[i] = mlx_load_xpm42(game->xpm[i].path);
+	
+	env.xpm[0] = mlx_load_xpm42("../textures/NO.xpm");
+	env.xpm[1] = mlx_load_xpm42("../textures/SO.xpm");
+	env.xpm[2] = mlx_load_xpm42("../textures/EA.xpm");
+	env.xpm[3] = mlx_load_xpm42("../textures/WE.xpm");
+	if (!env.xpm[0] || !env.xpm[1] || !env.xpm[2] || !env.xpm[3])
+		ft_error_mlx(&env);
 	
 	if (mlx_image_to_window(env.mlx, env.img, 0, 0) < 0)
 		ft_error_mlx(&env);
 	mlx_loop_hook(env.mlx, set_game, &env);
 	mlx_close_hook(env.mlx, close_func, &env);
 	mlx_loop(env.mlx);
-	clean_exit(&env);
-	return (0);
+	clean_bf_exit(&env);
+	return (EXIT_SUCCESS);
 }

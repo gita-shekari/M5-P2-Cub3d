@@ -1,18 +1,48 @@
 #include <math.h>
 #include "try.h"
 
+typedef enum	e_dir
+{
+	NORTH,
+	SOUTH,
+	EAST,
+	WEST,
+	DEF
+}				t_dir;
+
+
 typedef struct	s_ray
 {
 	double x;
 	double y;
 }				t_ray;
 
+typedef struct	s_hit
+{
+	double	perp_dist;
+	t_dir	side;		//side = 0; vertical wall on the west or east
+}				t_hit;
+
+
+t_dir	check_side(int side, t_env	*env)
+{
+	if (side == 0 && env->player->dirx > 0)
+		return (EAST);
+	else if (side == 0 && env->player->dirx <= 0)
+		return (WEST);
+	else if (side == 1 && env->player->diry > 0)
+		return (SOUTH);
+	else if (side == 1 && env->player->diry <= 0)
+		return (NORTH);
+	else
+		return (DEF);
+}
 // x' = px + t * raydir_x;
 // y' = py + t * raydir_x;
 // t is the distane of px to the next point of x'
 
 
-double	dda(t_env *env, t_ray *ray)
+t_hit	*dda(t_env *env, t_ray *ray)
 {
 	t_p	  player;
 
@@ -69,15 +99,22 @@ double	dda(t_env *env, t_ray *ray)
 		if (env->grid[mapx][mapy] == '1')
 			hit = 1;
 	}
-	double wall_dist;
+	t_hit	*p;
+
+	p = NULL;
 	if (side == 0)
-		wall_dist = (mapx - player.x + (1 - stepx) / 2) / ray->x;
+	{
+		p->perp_dist = (mapx - player.x + (1 - stepx) / 2) / ray->x;
+	}
 	else
-		wall_dist = (mapy - player.y + (1 - stepy) / 2) / ray->y;
-	return (wall_dist);
+	{
+		p->perp_dist = (mapy - player.y + (1 - stepy) / 2) / ray->y;
+	}
+	p->side = check_side(side, env);
+	return (p);
 }
 /**
- * ray.x = dirx + planex * camera_x;
+ * ray.x = dirx + planex * camera_x (linear interpolation);
  * originally plane = tan(FOV / 2) FOV is angle, e.g. 60;
  * plane is verticle to the player.dir;
  * camerax = 2 * x / WIDTH - 1; => normalize from [0, WIDTH] to [-1, 1];
@@ -90,24 +127,43 @@ static int camera(double x)
 
 void	ft_run_dda(t_env *env)
 {
-	t_p	  player;
 	t_ray ray;
-	double	dist;
 	int	x;
 	int y;
+	t_hit	*hit;
 
 	x = 0;
-	player = *(env->player);
 	while (x < WIDTH)
 	{
-		ray.x = player.planex * camera(x) + player.dirx;
-		ray.y = player.planey * camera(x) + player.diry;
-		dist = dda(env, &ray);
+		ray.x = env->player->planex * camera(x) + env->player->dirx;
+		ray.y = env->player->planey * camera(x) + env->player->diry;
+		hit = dda(env, &ray);
 
-		int	y = start;
-		while (y < end )
+		int	line_height = (int)(HEIGHT / hit->perp_dist);
+		int	start = HEIGHT / 2 - line_height / 2;
+		if (start < 0)
+			start = 0;
+		int	end = HEIGHT / 2 + line_height / 2;
+		if (end >= HEIGHT)
+			end = HEIGHT - 1;
+		y = 0;
+		while (y < start)
 		{
-			draw_texture_pixel();
+			tmp_put_color(env, x, y, 'c');
+			//draw_ceiling(env, x, y);
+			y++;
+		}
+		y = start;
+		while (y < end)
+		{
+			tmp_put_color(env, x, y, 't');
+			//draw_textures(env, x, y, hit->side);
+			y++;
+		}
+		while (y < HEIGHT)
+		{
+			tmp_put_color(env, x, y, 'f');
+			//draw_floor(env, x, y);
 			y++;
 		}
 		x++;

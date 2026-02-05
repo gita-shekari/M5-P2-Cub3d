@@ -5,7 +5,7 @@ MLX_DIR = ./MLX42
 LIBFT_DIR = ../libft
 
 #files
-SRC = main.c error.c color.c
+SRC = main.c error.c color.c dda.c
 OBJ = $(SRC:%.c=%.o)
 
 #libraies and headers
