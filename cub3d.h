@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        ::::::::            */
-/*   cub3d.h                                            :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: gshekari <gshekari@student.42.fr>            +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2026/01/26 15:24:16 by gshekari      #+#    #+#                 */
-/*   Updated: 2026/01/29 18:05:00 by jdong         ########   odam.nl         */
-/*                                                                            */
-/* ************************************************************************** */
 
 #ifndef CUB3d_H
 #define CUB3d_H
@@ -17,19 +6,18 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <fcntl.h>
-#include "libft.h"
+#include "libft/libft.h"
 
 typedef enum s_side
 {
-	NORTH,
-	SOUTH,
-	EAST,
-	WEST
+	NORTH = 0,
+	SOUTH = 1,
+	EAST = 2,
+	WEST = 3
 } t_side;
 
 typedef struct s_img
 {
-	void	*img_ptr;
 	char	*path;
 }	t_img;
 
@@ -43,8 +31,8 @@ typedef struct s_rgb
 typedef struct s_map
 {
 	char	**data;
-	int		width;
-	int		height;
+	size_t	width;
+	size_t	height;
 
 } t_map;
 
@@ -54,13 +42,18 @@ typedef struct s_game
 	t_img	img[4];
 	t_rgb	ceiling;
 	t_rgb	floor;
-	t_side	side; // direction facing, decide dirx and diry
-	double	dirx;
-	double	diry; 
-	double	x; // start position in map
-	double	y; // start position in map
 
 }	t_game;
 
+int init_game(int fd, t_game *game);
+
+/****************clean********************/
+void	free_split(char **split);
+
+/****************init_map********************/
+int	parse_map(int fd, t_game *game, char *line);
+
+/****************validate_map********************/
+int	validate_map(t_map	map);
 
 #endif

@@ -1,6 +1,11 @@
 NAME = cub3d
 
-SRCS =  main.c 
+SRCS =  src/main.c \
+		src/init_game.c \
+		src/clean.c \
+		src/parse_map.c \
+		src/validate_map.c
+
 OBJS = $(SRCS:.c=.o)
 
 CC = cc
@@ -30,5 +35,3 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
-
-# https://github.com/codam-coding-college/MLX42.git
