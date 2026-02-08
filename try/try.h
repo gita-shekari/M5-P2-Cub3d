@@ -9,11 +9,12 @@
 # define WALL	0x964B00FF
 
 # define FOV 66.0
-# define M_PI 3.14159265358979323846
+//# define M_PI 3.14159265358979323846
 
 # define ROTATE 30
 
 #include <MLX42/MLX42.h>
+#include <stdio.h> // for printing
 
 typedef struct	s_pos
 {
@@ -37,7 +38,7 @@ typedef struct s_env
 	mlx_image_t	*img;
 	xpm_t		**xpm;
 	char		**grid;
-	t_p			*player;
+	t_p			player;
 	int			draw;
 }				t_env;
 

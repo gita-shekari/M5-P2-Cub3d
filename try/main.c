@@ -37,6 +37,7 @@ void	set_game(void *param)
 	env = param;
 	//y = 0;
 	//pixels = (uint32_t *)env->img->pixels;
+	printf("before dda\n");
 	ft_run_dda(env);
 	//while (y < HEIGHT)
 	//{
@@ -63,35 +64,41 @@ void	close_func(void *param)
 
 static void set_player_dir(t_p *p, char c)
 {
+	printf("%p, dirx = %f\n", p, p->dirx);
     if (c == 'N')
 	{
-		p->dirx = 0;
-		p->diry = -1;
+		p->dirx = 0.0;
+		p->diry = -1.0;
 	}
     else if (c == 'S')
 	{
-		p->dirx = 0; 
-		p->diry = 1;
+		p->dirx = 0.0; 
+		p->diry = 1.0;
 	}      
     else if (c == 'E')
 	{
-		p->dirx = 1;
-		p->diry = 0;
+		p->dirx = 1.0;
+		p->diry = 0.0;
 	}
     else if (c == 'W')
 	{
-		p->dirx = -1;
-		p->diry = 0;
+		p->dirx = -1.0;
+		p->diry = 0.0;
 	}
+	printf("finish\n");
 }
 
 static void	set_player_plane(t_p *p)
 {
 	double	plane_len;
 	
+	//printf("in set player plane\n");
 	plane_len = tan(FOV * M_PI / 180.0);
+	//printf("len = %f\n", plane_len);
 	p->planex = ((-1) * p->diry) * (plane_len / 2);
+	//printf("px = %f\n", p->planex);
 	p->planey = p->dirx * (plane_len * 2);
+	//printf("py = %f\n", p->planey);
 }
 
 void    set_grid(char *map[], t_env *env)
@@ -103,6 +110,7 @@ void    set_grid(char *map[], t_env *env)
     env->grid = map;
     found = 0;
     y = 0;
+	printf("in set grid\n");
     while (map[y])
     {
         x = 0;
@@ -116,10 +124,10 @@ void    set_grid(char *map[], t_env *env)
                     ft_putstr_fd("Error: multiple player start positions\n", 2);
                     exit(1);
                 }
-                env->player->x = x + 0.5;
-                env->player->y = y + 0.5;
-                set_player_dir(env->player, map[y][x]);
-				set_player_plane(env->player);
+                env->player.x = (double)x + 0.5;
+                env->player.y = (double)y + 0.5;
+                set_player_dir(&(env->player), map[y][x]);
+				set_player_plane(&(env->player));
                 map[y][x] = '0';
                 found = 1;
             }
@@ -139,7 +147,7 @@ int32_t	main(void)
 {
 	t_env	env;
 
-	char *map[] = {
+	char map_data[][11] = {
     "1111111111",
     "1000000001",
     "1000110001",
@@ -147,11 +155,14 @@ int32_t	main(void)
     "1000N10001",
     "1000000001",
     "1111111111",
-    NULL
 	};
 
-	set_grid(map, &env);
+	char *map[8];
+	for (int i = 0; i < 7; i++)
+    	map[i] = map_data[i];
+	map[7] = NULL;
 
+	set_grid(map, &env);
 	env.mlx = NULL;
 	env.img = NULL;
 	env.mlx = mlx_init(WIDTH, HEIGHT, "hi and try", false);
@@ -169,16 +180,17 @@ int32_t	main(void)
 	//int	i = -1;
 	//while (++i < 4)
 	//	env.xpm[i] = mlx_load_xpm42(game->xpm[i].path);
-	
-	env.xpm[0] = mlx_load_xpm42("../textures/NO.xpm");
-	env.xpm[1] = mlx_load_xpm42("../textures/SO.xpm");
-	env.xpm[2] = mlx_load_xpm42("../textures/EA.xpm");
-	env.xpm[3] = mlx_load_xpm42("../textures/WE.xpm");
+	printf("before open xpm\n");
+	env.xpm[0] = mlx_load_xpm42("./textures/NO.xpm42");
+	env.xpm[1] = mlx_load_xpm42("./textures/SO.xpm42");
+	env.xpm[2] = mlx_load_xpm42("./textures/EA.xpm42");
+	env.xpm[3] = mlx_load_xpm42("./textures/WE.xpm42");
 	if (!env.xpm[0] || !env.xpm[1] || !env.xpm[2] || !env.xpm[3])
 		ft_error_mlx(&env);
 	
 	if (mlx_image_to_window(env.mlx, env.img, 0, 0) < 0)
 		ft_error_mlx(&env);
+	printf("before before set game\n");
 	mlx_loop_hook(env.mlx, set_game, &env);
 	mlx_close_hook(env.mlx, close_func, &env);
 	mlx_loop(env.mlx);
