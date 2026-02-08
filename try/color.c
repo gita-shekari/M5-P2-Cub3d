@@ -14,24 +14,24 @@ uint32_t	color(mlx_texture_t *tex, int x, int y)
 	);
 }
 
-static uint32_t	colorof(int type)
-{
-	return (
-		((uint32_t)type << 24) |
-		((uint32_t)type << 16) |
-		((uint32_t)type << 8) |
-		((uint32_t)type)
-	);
-}
+//static uint32_t	colorof(int type)
+//{
+//	return (
+//		((uint32_t)type << 24) |
+//		((uint32_t)type << 16) |
+//		((uint32_t)type << 8) |
+//		((uint32_t)type)
+//	);
+//}
 
 void	tmp_put_color(t_env *env, int x, int y, char part)
 {
 	if (part == 'c')
-		mlx_put_pixel(env->img, (uint32_t)x, (uint32_t)y, colorof(CEILING));
+		mlx_put_pixel(env->img, (uint32_t)x, (uint32_t)y, CEILING);
 	if (part == 't')
-		mlx_put_pixel(env->img, (uint32_t)x, (uint32_t)y, colorof(WALL));
+		mlx_put_pixel(env->img, (uint32_t)x, (uint32_t)y, WALL);
 	if (part == 'f')
-		mlx_put_pixel(env->img, (uint32_t)x, (uint32_t)y, colorof(FLOOR));
+		mlx_put_pixel(env->img, (uint32_t)x, (uint32_t)y, FLOOR);
 }
 /** t = texture dir 0-N, 1-S, 2-E, 3-W */
 //void	draw_texture(t_env *env, t_pos *pos, t_dir t)

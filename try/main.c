@@ -37,8 +37,12 @@ void	set_game(void *param)
 	env = param;
 	//y = 0;
 	//pixels = (uint32_t *)env->img->pixels;
-	printf("before dda\n");
-	ft_run_dda(env);
+	if (env->draw)
+	{
+		ft_run_dda(env);
+		env->draw = 0;
+	}
+		
 	//while (y < HEIGHT)
 	//{
 	//	x = 0;
@@ -191,6 +195,7 @@ int32_t	main(void)
 	if (mlx_image_to_window(env.mlx, env.img, 0, 0) < 0)
 		ft_error_mlx(&env);
 	printf("before before set game\n");
+	env.draw = 1;
 	mlx_loop_hook(env.mlx, set_game, &env);
 	mlx_close_hook(env.mlx, close_func, &env);
 	mlx_loop(env.mlx);
