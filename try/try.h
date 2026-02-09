@@ -16,11 +16,28 @@
 #include <MLX42/MLX42.h>
 #include <stdio.h> // for printing
 
-typedef struct	s_pos
+typedef enum	e_dir
 {
-	int	x;
-	int	y;
-}			t_pos;
+	NORTH,
+	SOUTH,
+	EAST,
+	WEST,
+}				t_dir;
+
+typedef struct	s_ray
+{
+	double x;
+	double y;
+}				t_ray;
+
+typedef struct	s_hit
+{
+	double	perp_dist;
+	double	wall_x;
+	int		wall_top;
+	int		wall_height;
+	t_dir	side;		//side = 0; vertical wall on the west or east
+}				t_hit;
 
 typedef struct	s_p
 {
@@ -44,7 +61,7 @@ typedef struct s_env
 
 uint32_t	color(mlx_texture_t *tex, int x, int y);
 void	tmp_put_color(t_env *env, int x, int y, char part);
-//void		draw_texture(t_env *env, t_pos *pos);
+void	draw_texture(int start, int end, t_hit *hit, t_env *env, int x);
 
 void	ft_run_dda(t_env *env);
 

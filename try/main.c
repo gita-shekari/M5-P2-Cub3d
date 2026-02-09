@@ -94,14 +94,14 @@ static void set_player_dir(t_p *p, char c)
 
 static void	set_player_plane(t_p *p)
 {
-	double	plane_len;
+	double	plane;
 	
 	//printf("in set player plane\n");
-	plane_len = tan(FOV * M_PI / 180.0);
+	plane = tan(FOV * M_PI / 180.0);
 	//printf("len = %f\n", plane_len);
-	p->planex = ((-1) * p->diry) * (plane_len / 2);
+	p->planex = ((-1) * p->diry) * (plane / 2);
 	//printf("px = %f\n", p->planex);
-	p->planey = p->dirx * (plane_len * 2);
+	p->planey = p->dirx * (plane / 2);
 	//printf("py = %f\n", p->planey);
 }
 
@@ -155,8 +155,8 @@ int32_t	main(void)
     "1111111111",
     "1000000001",
     "1000110001",
-    "1000100001",
-    "1000N10001",
+    "1010000001",
+    "1000N00101",
     "1000000001",
     "1111111111",
 	};
