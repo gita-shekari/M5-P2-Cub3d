@@ -101,7 +101,7 @@ void	dda(t_env *env, t_ray *ray, t_hit *p)
 //
 static double camera(double x)
 {
-	return (2 * x / (WIDTH - 1));
+	return (2 * x / WIDTH - 1);
 }
 
 void	ft_run_dda(t_env *env)
