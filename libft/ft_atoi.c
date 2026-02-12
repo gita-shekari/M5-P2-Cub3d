@@ -1,37 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: gshekari <gshekari@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/22 18:06:20 by gshekari          #+#    #+#             */
-/*   Updated: 2025/05/03 19:38:08 by gshekari         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   ft_atoi.c                                          :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: gshekari <gshekari@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2025/04/22 18:06:20 by gshekari      #+#    #+#                 */
+/*   Updated: 2026/02/12 18:32:53 by jdong         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 int	ft_atoi(const char *nptr)
 {
-	int	i;
-	int	sign;
-	int	result;
+	long	number;
+	int		sign;
 
-	result = 0;
-	i = 0;
+	number = 0;
 	sign = 1;
-	while (nptr[i] == ' ' || nptr[i] == '\t' || nptr[i] == '\n'
-		|| nptr[i] == '\v' || nptr[i] == '\f' || nptr[i] == '\r')
-		i++;
-	if (nptr[i] == '-' || nptr[i] == '+')
+	while ((*nptr >= 9 && *nptr <= 13) || *nptr == 32)
+		nptr++;
+	if (*nptr == '-' || *nptr == '+')
 	{
-		if (nptr[i] == '-')
-			sign = -sign;
-		i++;
+		if (*nptr == '-')
+			sign = -1;
+		nptr++;
 	}
-	while (nptr[i] >= '0' && nptr[i] <= '9')
+	while (*nptr >= '0' && *nptr <= '9')
 	{
-		result = (result * 10) + (nptr[i] - '0');
-		i ++;
+		number = (*nptr - '0') + number * 10;
+		nptr++;
 	}
-	return (sign * result);
+	return ((int)(sign * number));
 }
