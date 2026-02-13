@@ -1,18 +1,17 @@
-
 #include "cub3d.h"
 
-int is_edge(t_map map, size_t i, size_t j)
+static int is_edge(t_map map, size_t i, size_t j)
 {
 	if (i > map.height)
 		return (1);
 	if (j > ft_strlen(map.grid[i]))
 		return (1);
-	if (map.grid[i][j] == ' ' || map.grid[i][j] == '\n')
+	if (map.grid[i][j] == ' ' || map.grid[i][j] == '\n' || !map.grid[i][j] )
 		return (1);
 	return (0);
 }
 
-int	validate_map_grid(t_map	map)
+static int	validate_map_grid(t_map	map)
 {
 
 	size_t	i;
@@ -22,14 +21,14 @@ int	validate_map_grid(t_map	map)
 	while(i < map.height)
 	{
 		j = 0;
-		while(j < map.width)
+		while(map.grid[i] && j < map.width && map.grid[i][j])
 		{
 			if (map.grid[i][j] == '0' || map.grid[i][j] == 'N' ||
 				map.grid[i][j] == 'S' || map.grid[i][j] == 'E' ||
 				map.grid[i][j] == 'W')
 			{
-				if(is_edge(map, i, j-1) || is_edge(map, i, j+1) ||
-					is_edge(map, i-1, j) || is_edge(map, i+1, j))
+				if ((j == 0 || is_edge(map, i, j-1)) || is_edge(map, i, j+1)
+					|| (i == 0) || is_edge(map, i-1, j) || is_edge(map, i+1, j))
 					return (0);
 			}
 			j++;

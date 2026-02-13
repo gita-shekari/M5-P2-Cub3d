@@ -8,6 +8,7 @@ LIBFT_DIR = ./libft
 SRCS =  src/main.c \
 		src/init_env.c \
 		src/clean.c \
+		src/parse_tex.c \
 		src/parse_map.c \
 		src/validate_map.c \
 		src/error.c \
@@ -15,7 +16,8 @@ SRCS =  src/main.c \
 		src/init_mlx.c \
 		src/mlx.c \
 		src/draw.c \
-		src/ray.c
+		src/ray.c \
+		src/player.c
 OBJ = $(SRCS:%.c=%.o)
 
 #libraies and headers
@@ -71,5 +73,3 @@ debug:fclean buildmlx buildlibft $(OBJ)
 	$(CC) $(OBJ) $(MLX_LIB) $(LIBFT) $(DEBUG_FLAGS) $(MLXFLAGS) -o $(NAME) -lm
 
 .PHONY: all, clean, fclean, re, buildmlx, buildlibft, debug
-
-#https://github.com/codam-coding-college/MLX42.git

@@ -1,8 +1,10 @@
 #include "cub3d.h"
 
-// x' = px + t * raydir_x;
-// y' = py + t * raydir_x;
-// t is the distane of px to the next point of x'
+/**
+ * x' = px + t * raydir_x;
+ * y' = py + t * raydir_x;
+ * t is the distane of px to the next point of x'
+*/ 
 
 static double	cal_unit_dist(t_ray ray, char dir)
 {

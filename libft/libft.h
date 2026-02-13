@@ -1,16 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   libft.h                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: gshekari <gshekari@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/22 18:40:29 by gshekari          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2026/02/11 19:01:43 by gshekari         ###   ########.fr       */
-=======
-/*   Updated: 2026/02/11 15:44:16 by gshekari         ###   ########.fr       */
->>>>>>> jdong
+/*                                                        ::::::::            */
+/*   libft.h                                            :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: gshekari <gshekari@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2025/04/22 18:40:29 by gshekari      #+#    #+#                 */
+/*   Updated: 2026/02/13 16:15:35 by jdong         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +24,7 @@
 int		ft_atoi(const char *nptr);
 void	ft_bzero(void *s, size_t n);
 void	*ft_calloc(size_t nmemb, size_t size);
+int		ft_isspace(int c);
 int		ft_isalnum(int c);
 int		ft_isalpha(int c);
 int		ft_isascii(int c);

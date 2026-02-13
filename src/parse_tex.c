@@ -1,0 +1,110 @@
+#include "cub3d.h"
+
+static void	set_env_rgb(char type, t_env *env, t_rgb RGB)
+{
+	if (type == 'F')
+	{
+		env->floor.R = RGB.R;
+		env->floor.G = RGB.G;
+		env->floor.B = RGB.B;
+		env->check.F_checked = 1;
+	}
+	else if (type == 'C')
+	{
+		env->ceiling.R = RGB.R;
+		env->ceiling.G = RGB.G;
+		env->ceiling.B = RGB.B;
+		env->check.C_checked = 1;
+	}
+}
+
+static int	set_floor_ceiling(char *line, int i, t_env *env, char type)
+{
+	char	**rgb;
+	t_rgb	RGB;
+
+	rgb = ft_split(&line[i], ',');
+	if (!rgb || !rgb[0] || !rgb[1] || !rgb[2])
+		return (0);
+	RGB.R = ft_atoi(rgb[0]);
+	RGB.G = ft_atoi(rgb[1]);
+	RGB.B = ft_atoi(rgb[2]);
+	if (RGB.R < 0 || RGB.R > 255 || RGB.G < 0 || RGB.G > 255 || RGB.B < 0 || RGB.B > 255)
+		return (free_split(rgb), 0);
+	if ((type == 'F' && env->check.F_checked == 0)
+		|| (type == 'C' && env->check.C_checked == 0))
+		set_env_rgb(type, env, RGB);
+	else
+		return (free_split(rgb), 0);
+	return (free_split(rgb), 1);
+}
+
+static void	set_env_tex(t_side	side, t_env *env, char *path)
+{
+	if (side == NORTH)
+	{
+		env->tex_path[NORTH] = path;
+		env->check.NO_checked = 1;
+	}
+	if (side == SOUTH)
+	{
+		env->tex_path[SOUTH] = path;
+		env->check.SO_checked = 1;
+	}
+	if (side == WEST)
+	{
+		env->tex_path[WEST] = path;
+		env->check.WE_checked = 1;
+	}
+	if (side == EAST)
+	{
+		env->tex_path[EAST] = path;
+		env->check.EA_checked = 1;
+	}
+}
+
+static int	set_textures(char *line, int i, char *side, t_env *env)
+{
+	char	*path;
+
+	path = ft_strtrim(&line[i], "\n");
+	if(!path)
+		return (0);
+	if(ft_strncmp(side, "NO", 2) == 0 && env->check.NO_checked == 0)
+		set_env_tex(NORTH, env, path);
+	else if(ft_strncmp(side, "SO", 2) == 0 && env->check.SO_checked == 0)
+		set_env_tex(SOUTH, env, path);
+	else if(ft_strncmp(side, "WE", 2) == 0 && env->check.WE_checked == 0)
+		set_env_tex(WEST, env, path);
+	else if(ft_strncmp(side, "EA", 2) == 0 && env->check.EA_checked == 0)
+		set_env_tex(EAST, env, path);
+	else
+		return (free(path), 0);
+	return (1);
+}
+
+int	parse_textures(char *line, int i, t_env *env)
+{
+	char	side[3];
+	char	type;
+
+	if (ft_strncmp(&line[i], "NO", 2) == 0 || ft_strncmp(&line[i], "SO", 2) == 0 ||
+		ft_strncmp(&line[i], "EA", 2) == 0 || ft_strncmp(&line[i], "WE", 2) == 0)
+	{
+		ft_strlcpy(side, &line[i], 3);
+		i += 2;
+		i = pass_spaces(&line[i]) + i;
+		if(!set_textures(line, i, side, env))
+			return (0);
+	}
+	else if (line[i] == 'C' || line[i] == 'F')
+	{
+		type = line[i++];
+		i += pass_spaces(&line[i]);
+		if(!set_floor_ceiling(line, i, env, type))
+			return (0);
+	}
+	else
+		return(0);
+	return (1);
+}

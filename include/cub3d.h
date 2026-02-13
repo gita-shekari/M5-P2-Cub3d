@@ -99,29 +99,17 @@ typedef struct s_env
 }	t_env;
 
 int init_env(int fd, t_env *env);
+int	parse_textures(char *line, int i, t_env *env);
+int	pass_spaces(char *line);
+int	parse_map(int fd, t_env *env, char *line);
+int	validate_map(t_env *env);
 
 /****************clean********************/
 void	free_split(char **split);
 
-/****************init_map********************/
-int	parse_map(int fd, t_env *env, char *line);
-
-/****************validate_map********************/
-int	validate_map(t_env *env);
-int	validate_map_grid(t_map	map);
-/****************validate_textures********************/
-int	validate_textures(t_env *env);
-
-
-/**********************env_part*********************/
-
-void	init_env_mlx(t_env *env);
+// player setup
+int		set_start_position(t_env *env);
 void	set_player_plane(t_p *p);
-
-// mlx.c mlx related func.
-void	set_game(void *param);
-void	close_func(void *param);
-void	key_func(mlx_key_data_t key, void *param);
 
 void	draw_col(int x, t_ray ray, t_env *env);
 
@@ -134,7 +122,17 @@ void	ft_run_dda(t_env *env);
 void	ft_error_mlx(t_env *env);
 void	clean_bf_exit(t_env *env, int fd);
 
-/**********************player_moves**************/
+// mlx.c mlx related func.
+void	init_env_mlx(t_env *env);
+void	set_game(void *param);
+void	close_func(void *param);
+void	key_func(mlx_key_data_t key, void *param);
 
+/**********************player_moves**************/
+void	player_move_forward(t_env *env);
+void	player_move_back(t_env *env);
+void	player_move_right(t_env *env);
+void	player_move_left(t_env *env);
+void	rotate(mlx_key_data_t key, t_env *env);
 
 #endif

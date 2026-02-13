@@ -1,4 +1,3 @@
-
 #include "cub3d.h"
 
 int	is_map_file(char *file_name)
@@ -38,18 +37,16 @@ int	main(int argc, char **argv)
 		return (ft_putstr_fd("Error\n", 2), 1);
 	env = ft_calloc(1, sizeof(t_env));
 	if (!env)
-		return (ft_putstr_fd("Fail at malloc\n", 2), 1);
+		return (ft_putstr_fd("Fail at malloc env\n", 2), 1);
 	set_config(env);
-	if (!init_env(fd, env))
+	if (!init_env(fd, env) || env->map.height < 4 || env->map.width < 4)
 		return (clean_bf_exit(env, fd), 1);
-	
 	close(fd);
 	init_env_mlx(env);
 	mlx_loop_hook(env->mlx, set_game, env);
 	mlx_key_hook(env->mlx, key_func, env);
 	mlx_close_hook(env->mlx, close_func, env);
 	mlx_loop(env->mlx);
-
 	clean_bf_exit(env, -1);
 	return (0);
 }
