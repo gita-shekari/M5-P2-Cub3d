@@ -39,7 +39,7 @@ int	main(int argc, char **argv)
 	if (!env)
 		return (ft_putstr_fd("Fail at malloc env\n", 2), 1);
 	set_config(env);
-	if (!init_env(fd, env) || env->map.height < 4 || env->map.width < 4)
+	if (!init_env(fd, env))
 		return (clean_bf_exit(env, fd), 1);
 	close(fd);
 	init_env_mlx(env);

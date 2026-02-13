@@ -26,6 +26,17 @@ static int	process_line(char *line, t_env *env, int i, int fd)
 	}
 }
 
+int	check_invalid(t_env *env)
+{
+	if (env->check.C_checked != 1 || env->check.F_checked != 1
+	|| env->check.NO_checked != 1 || env->check.SO_checked != 1
+	|| env->check.EA_checked != 1 || env->check.WE_checked != 1)
+		return (ft_putstr_fd("missing info for texture or color\n", 2), 0);
+	if (env->map.width < 4 || env->map.height < 4)
+		return (ft_putstr_fd("map is too small\n", 2), 0);
+	return (1);
+}
+
 int	init_env(int fd, t_env *env)
 {
 	char	*line;
@@ -50,6 +61,8 @@ int	init_env(int fd, t_env *env)
 		free(line);
 		line = get_next_line(fd);
 	}
+	if (!check_invalid(env))
+		return (0);
 	return (1);
 }
 

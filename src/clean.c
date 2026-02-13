@@ -1,5 +1,14 @@
 #include "cub3d.h"
 
+void	free_char_ptr(char **ptr)
+{
+	if (*ptr)
+	{
+		free(*ptr);
+		*ptr = NULL;
+	}
+}
+
 void	free_split(char **split)
 {
 	int	i;
