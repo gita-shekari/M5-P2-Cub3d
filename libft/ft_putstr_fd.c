@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: gshekari <gshekari@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/03 16:29:00 by gshekari          #+#    #+#             */
-/*   Updated: 2025/05/07 13:40:50 by gshekari         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   ft_putstr_fd.c                                     :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: gshekari <gshekari@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2025/05/03 16:29:00 by gshekari      #+#    #+#                 */
+/*   Updated: 2026/02/12 16:43:01 by jdong         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_putstr_fd(char *s, int fd)
+void	ft_putstr_fd(const char *s, int fd)
 {
 	write(fd, s, (ft_strlen(s)));
 }

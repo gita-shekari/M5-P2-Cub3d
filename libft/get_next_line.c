@@ -1,112 +1,130 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: gshekari <gshekari@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/12 16:50:18 by gshekari          #+#    #+#             */
-/*   Updated: 2025/08/11 18:22:10 by gshekari         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   get_next_line.c                                    :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jdong <jdong@student.codam.nl>               +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2025/05/15 14:25:01 by jdong         #+#    #+#                 */
+/*   Updated: 2026/02/13 18:46:25 by jdong         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdlib.h>
+#include <unistd.h>
 
-#ifndef BUFFER_SIZE
-
-# define BUFFER_SIZE 1024
-
-#endif
-
-int	ft_strchr_line(const char *s, int c)
+char	*combine_buffers(char *buffer, char *temp_buf, size_t temp_len)
 {
-	int		i;
-	char	*str;
+	char	*joinedstr;
+	size_t	size;
 
-	str = (char *)s;
-	i = 0;
-	while (str[i] != '\0')
-	{
-		if ((unsigned char)str[i] == (unsigned char)c)
-			return (1);
-		i++;
-	}
-	if ((unsigned char)c == '\0' && str[i] == '\0')
-		return (1);
-	return (0);
+	size = ft_gstrlen(buffer) + temp_len + 1;
+	joinedstr = ft_gcalloc(size, 1);
+	if (!joinedstr)
+		return (free(buffer), NULL);
+	ft_gstrlcpy(joinedstr, buffer, size);
+	ft_gstrlcat(joinedstr, temp_buf, size);
+	free(buffer);
+	return (joinedstr);
 }
 
-char	*stash_trim(char *stash, size_t index)
+char	*get_contents(char *buffer, int fd)
 {
-	size_t	j;
-	char	*temp;
+	char	*temp_buf;
+	ssize_t	byte_read;
 
-	j = 0;
-	if (!stash || index >= ft_strlen(stash))
+	if (!buffer)
 	{
-		free(stash);
-		return (NULL);
+		buffer = ft_gcalloc(BUFFER_SIZE + 1, 1);
+		if (!buffer)
+			return (NULL);
 	}
-	temp = malloc(ft_strlen(stash) - index + 1);
-	if (!temp)
-		return (NULL);
-	while (stash[index])
-		temp[j++] = stash[index++];
-	temp[j] = '\0';
-	free(stash);
-	stash = NULL;
-	return (temp);
+	byte_read = 1;
+	temp_buf = ft_gcalloc(BUFFER_SIZE + 1, 1);
+	if (!temp_buf)
+		return (free(buffer), NULL);
+	while (byte_read > 0)
+	{
+		byte_read = read(fd, temp_buf, BUFFER_SIZE);
+		if (byte_read == -1)
+			return (free(temp_buf), free(buffer), NULL);
+		temp_buf[byte_read] = '\0';
+		buffer = combine_buffers(buffer, temp_buf, (size_t)byte_read);
+		if (!buffer || ft_gstrchr(temp_buf, '\n'))
+			break ;
+	}
+	return (free(temp_buf), buffer);
 }
 
-char	*extract_line(char *stash)
+char	*get_curr_line(char *buffer)
 {
 	char	*line;
+	size_t	len;
 	size_t	i;
 
 	i = 0;
-	line = malloc(ft_strlen(stash) + 1);
-	if (!line)
-	{
-		free(stash);
-		stash = NULL;
+	len = 0;
+	if (!buffer[i])
 		return (NULL);
-	}
-	while (stash[i] && stash[i] != '\n')
+	while (buffer[len] && buffer[len] != '\n')
+		len++;
+	line = ft_gcalloc(len + 2, 1);
+	if (!line)
+		return (NULL);
+	while (buffer[i] && buffer[i] != '\n')
 	{
-		line[i] = stash[i];
+		line[i] = buffer[i];
 		i++;
 	}
-	if (stash[i] == '\n')
-		line[i++] = '\n';
-	line[i] = '\0';
+	if (buffer[i] == '\n')
+		line[i] = '\n';
+	return (line);
+}
+
+char	*new_line_pointer(char	*buffer)
+{
+	char	*line;
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	j = 0;
+	while (buffer[i] && buffer[i] != '\n')
+		i++;
+	if (!buffer[i])
+		return (free(buffer), NULL);
+	line = ft_gcalloc(ft_gstrlen(buffer) - i + 1, 1);
+	if (!line)
+		return (free(buffer), NULL);
+	i++;
+	while (buffer[i])
+		line[j++] = buffer[i++];
+	free(buffer);
 	return (line);
 }
 
 char	*get_next_line(int fd)
 {
-	char		*buf;
+	static char	*buffer;
 	char		*line;
-	static char	*stash;
-	ssize_t		bytesread;
 
-	if (fd == -1)
-		return (free(stash), stash = NULL, NULL);
-	buf = (char *)malloc(BUFFER_SIZE + 1);
-	if (!buf)
-		return (NULL);
-	while (1)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 	{
-		bytesread = read(fd, buf, BUFFER_SIZE);
-		if (bytesread <= 0)
-			break ;
-		buf[bytesread] = '\0';
-		stash = ft_strjoin_line(stash, buf);
-		if (stash == NULL || ft_strchr_line(stash, '\n'))
-			break ;
+		if (buffer)
+			free(buffer);
+		return (NULL);
 	}
-	free(buf);
-	if (!stash || stash[0] == '\0' || bytesread == -1)
-		return (free(stash), stash = NULL, NULL);
-	line = extract_line(stash);
-	return (stash = stash_trim(stash, ft_strlen(line)), line);
+	buffer = get_contents(buffer, fd);
+	if (!buffer)
+		return (NULL);
+	line = get_curr_line(buffer);
+	if (!line)
+	{
+		free(buffer);
+		buffer = NULL;
+		return (NULL);
+	}
+	buffer = new_line_pointer(buffer);
+	return (line);
 }

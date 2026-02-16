@@ -1,32 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: gshekari <gshekari@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/08 17:34:13 by gshekari          #+#    #+#             */
-/*   Updated: 2025/08/02 17:49:20 by gshekari         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   get_next_line.h                                    :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jdong <jdong@student.codam.nl>               +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2025/05/15 14:39:33 by jdong         #+#    #+#                 */
+/*   Updated: 2026/02/13 18:36:07 by jdong         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
-
 # define GET_NEXT_LINE_H
 
-# include <stdio.h>
-# include <stdlib.h>
-# include <fcntl.h>
-# include <unistd.h>
-# include "libft.h"
+# include <stddef.h>
 
-size_t	ft_strlcpy(char *dest, const char *src, size_t size);
-size_t	ft_strlcat(char *dest, const char *src, size_t size);
-char	*ft_strjoin_line(char *s1, char *s2);
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
+
+//include functions in get_next_line_utils
+size_t	ft_gstrlen(const char *str);
+void	*ft_gcalloc(size_t nmemb, size_t size);
+size_t	ft_gstrlcpy(char *dst, const char *src, size_t size);
+size_t	ft_gstrlcat(char *dst, const char *src, size_t size);
+int		ft_gstrchr(char *s, int c);
+//get next line functions.
+char	*combine_buffers(char *buffer, char *temp_buf, size_t temp_len);
+char	*get_contents(char *buffer, int fd);
+char	*get_curr_line(char *buffer);
+char	*new_line_pointer(char	*buffer);
 char	*get_next_line(int fd);
-char	*stash_trim(char *stash, size_t index);
-char	*extract_line(char *stash);
-char	*ft_strdup(const char *s);
-int		ft_strchr_line(const char *s, int c);
 
 #endif
