@@ -106,6 +106,8 @@ int	validate_map(t_env *env);
 
 /****************clean********************/
 void	free_split(char **split);
+void	free_charptr(char **ptr);
+void	clean_bf_exit(t_env *env, int fd);
 
 // player setup
 int		set_start_position(t_env *env);
@@ -119,8 +121,10 @@ void	cal_ray_dir(t_ray *ray, t_p player, int x);
 
 void	ft_run_dda(t_env *env);
 
+int		ft_error_map(char *s);
+int		ft_malloc(char *s);
+int		ft_error_gen(char *s);
 void	ft_error_mlx(t_env *env);
-void	clean_bf_exit(t_env *env, int fd);
 
 // mlx.c mlx related func.
 void	init_env_mlx(t_env *env);

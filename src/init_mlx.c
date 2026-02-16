@@ -7,12 +7,6 @@ void	init_env_mlx(t_env *env)
 	env->mlx = NULL;
 	env->img = NULL;
 	env->xpm = NULL;
-	env->mlx = mlx_init(WIDTH, HEIGHT, "hi and try", false);
-	if (!env->mlx)
-		ft_error_mlx(env);
-	env->img = mlx_new_image(env->mlx, WIDTH, HEIGHT);
-	if (!env->img)
-		ft_error_mlx(env);
 	env->xpm = ft_calloc(4, sizeof(xpm_t *));
 	if (!env->xpm)
 		ft_error_mlx(env);
@@ -23,6 +17,12 @@ void	init_env_mlx(t_env *env)
 		if (!env->xpm[i])
 			ft_error_mlx(env);
 	}
+	env->mlx = mlx_init(WIDTH, HEIGHT, "No way out", false);
+	if (!env->mlx)
+		ft_error_mlx(env);
+	env->img = mlx_new_image(env->mlx, WIDTH, HEIGHT);
+	if (!env->img)
+		ft_error_mlx(env);
 	if (mlx_image_to_window(env->mlx, env->img, 0, 0) < 0)
 		ft_error_mlx(env);
 	env->draw = 1;

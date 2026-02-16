@@ -43,10 +43,7 @@ static int	check_player(t_env *env, int i, int j, int *found)
 		|| env->map.grid[i][j] == 'E' || env->map.grid[i][j] == 'W')
 	{
 		if (*found == 1)
-		{
-			ft_putstr_fd("Error: multiple player start positions\n", 2);
-			return (0);
-		}
+			return(ft_error_map("multiple players"));
 		env->player.x = (double)j + 0.5;
 		env->player.y = (double)i + 0.5;
 		init_player_dir(&(env->player), env->map.grid[i][j]);
@@ -77,9 +74,6 @@ int	set_start_position(t_env *env)
 		i++;
 	}
 	if (!found)
-	{
-		ft_putstr_fd("Error: player start position not found\n", 2);
-		return (0);
-	}
+		return (ft_error_map("no players"));
 	return (1);
 }

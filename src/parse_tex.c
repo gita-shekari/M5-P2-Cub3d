@@ -12,20 +12,20 @@ static int	check_rgb_value(char **rgb, t_rgb *RGB)
 	{
 		j = 0;
 		if (!rgb[i])
-			return (ft_putstr_fd("missing rgb value\n", 2),0);
+			return (ft_error_map("missing rgb value"));
 		j = pass_spaces(rgb[i]);
 		if (!rgb[i][j])
-			return (ft_putstr_fd("missing rgb value\n", 2),0);
+			return (ft_error_map("missing rgb value"));
 	}
 	if (rgb[i])
-		return (ft_putstr_fd("too many rgb value\n", 2), 0);
+		return (ft_error_map("too many rgb value"));
 	RGB->R = ft_atoi(rgb[0]);
 	RGB->G = ft_atoi(rgb[1]);
 	RGB->B = ft_atoi(rgb[2]);
 	if (RGB->R < 0 || RGB->R > 255
 		|| RGB->G < 0 || RGB->G > 255 
 		|| RGB->B < 0 || RGB->B > 255)
-		return (ft_putstr_fd("invalid rgb value, number\n", 2), 0);
+		return (ft_error_map("invalid rgb value"));
 	return (1);
 }
 
@@ -52,7 +52,7 @@ static int	set_floor_ceiling(char *line, int i, t_env *env, char type)
 		env->check.C_checked = 1;
 	}
 	else
-		return (free_split(rgb), ft_putstr_fd("too many F or C value\n", 2), 0);
+		return (free_split(rgb), ft_error_map("duplicated value for ceiling or floor"));
 	return (free_split(rgb), 1);
 }
 
@@ -86,7 +86,7 @@ static int	set_textures(char *line, int i, char *side, t_env *env)
 
 	path = ft_strtrim(&line[i], "\n");
 	if(!path)
-		return (0);
+		return (ft_malloc("parse texture"));
 	if(ft_strncmp(side, "NO", 2) == 0 && env->check.NO_checked == 0)
 		set_env_tex(NORTH, env, path);
 	else if(ft_strncmp(side, "SO", 2) == 0 && env->check.SO_checked == 0)
@@ -96,7 +96,10 @@ static int	set_textures(char *line, int i, char *side, t_env *env)
 	else if(ft_strncmp(side, "EA", 2) == 0 && env->check.EA_checked == 0)
 		set_env_tex(EAST, env, path);
 	else
-		return (free(path), ft_putstr_fd("too many textures\n", 2), 0);
+	{
+		free_charptr(&path);
+		return (ft_error_map("duplicated textures"));
+	}
 	return (1);
 }
 
@@ -122,6 +125,6 @@ int	parse_textures(char *line, int i, t_env *env)
 			return (0);
 	}
 	else
-		return(ft_putstr_fd("unrelated information\n", 2), 0);
+		return(ft_error_map("unrelated information"));
 	return (1);
 }

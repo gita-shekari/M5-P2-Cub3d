@@ -22,6 +22,8 @@ static int	calculate_map_width(t_map map)
 	while(i < map.height)
 	{
 		size = ft_strlen(map.grid[i]);
+		if (map.grid[i][size - 1] == '\n')
+			size -= 1;
 		if(size > max)
 			max = size;
 		i++;
@@ -40,7 +42,7 @@ int	parse_map(int fd, t_env *env,char *line)
 	{
 		temp = (char **)malloc(sizeof(char *) * (i + 2));
 		if(!temp)
-			return (0);
+			return (ft_malloc("parsing map"));
 		copy_grid(temp, env, i);
 		temp[i] = line;
 		temp[i + 1] = NULL;
