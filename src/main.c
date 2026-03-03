@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   main.c                                             :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jdong <jdong@student.codam.nl>               +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2026/02/18 14:54:10 by jdong         #+#    #+#                 */
+/*   Updated: 2026/02/18 16:50:29 by jdong         ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 int	is_map_file(char *file_name)
@@ -12,15 +24,15 @@ int	is_map_file(char *file_name)
 	else
 		return (0);
 }
+
 void	set_config(t_env *env)
 {
-
-	env->check.NO_checked = 0;
-	env->check.SO_checked = 0;
-	env->check.WE_checked = 0;
-	env->check.EA_checked = 0;
-	env->check.F_checked = 0;
-	env->check.C_checked = 0;
+	env->check.no_checked = 0;
+	env->check.so_checked = 0;
+	env->check.we_checked = 0;
+	env->check.ea_checked = 0;
+	env->check.f_checked = 0;
+	env->check.c_checked = 0;
 }
 
 int	main(int argc, char **argv)

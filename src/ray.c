@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   ray.c                                              :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jdong <jdong@student.codam.nl>               +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2026/02/18 14:53:44 by jdong         #+#    #+#                 */
+/*   Updated: 2026/02/20 18:16:13 by jdong         ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 /**
  * ray.x = dirx + planex * camera_x (linear interpolation);
@@ -8,7 +20,9 @@
 //
 
 /**
- * Be aware of the direction. North < 0, because we want to make the grid as the way it is being drawed and when going down to south, the y is being added. */
+ * Be aware of the direction. North < 0, because we want to make
+ * the grid as the way it is being drawed and when going down to
+ * south, the y is being added. */
 static t_side	check_wall(int side, t_ray ray)
 {
 	if (side == 0)
@@ -36,7 +50,11 @@ void	cal_ray_dir(t_ray *ray, t_p player, int x)
 	ray->diry = player.diry + player.planey * plane_position;
 }
 
-/** p(x) = x + t * dx */
+/** p(x) = x + t * dx
+ * p(y) = y + t *dy
+ * t = p(x) - x / d
+ */
+
 void	cal_ray_hit(t_env *env, t_ray *ray, t_dda dda, int side)
 {
 	t_p		player;
@@ -44,12 +62,14 @@ void	cal_ray_hit(t_env *env, t_ray *ray, t_dda dda, int side)
 	player = env->player;
 	if (side == 0)
 	{
-		ray->perp_dist = (dda.mapx - player.x + (1 - dda.stepx) / 2) / ray->dirx;
-		ray->wall_x = player.x + ray->perp_dist * ray->diry;
+		ray->perp_dist = (dda.mapx - player.x
+				+ (1 - dda.stepx) / 2) / ray->dirx;
+		ray->wall_x = player.y + ray->perp_dist * ray->diry;
 	}
 	else
 	{
-		ray->perp_dist = (dda.mapy - player.y + (1 - dda.stepy) / 2) / ray->diry;
+		ray->perp_dist = (dda.mapy - player.y
+				+ (1 - dda.stepy) / 2) / ray->diry;
 		ray->wall_x = player.x + ray->perp_dist * ray->dirx;
 	}
 	ray->wall_x -= floor(ray->wall_x);

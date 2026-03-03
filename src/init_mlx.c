@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   init_mlx.c                                         :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: gshekari <gshekari@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2026/02/18 14:54:16 by jdong         #+#    #+#                 */
+/*   Updated: 2026/02/20 17:50:46 by jdong         ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 void	init_env_mlx(t_env *env)
@@ -25,7 +37,6 @@ void	init_env_mlx(t_env *env)
 		ft_error_mlx(env);
 	if (mlx_image_to_window(env->mlx, env->img, 0, 0) < 0)
 		ft_error_mlx(env);
-	env->draw = 1;
 }
 
 void	key_func(mlx_key_data_t key, void *param)
@@ -33,21 +44,18 @@ void	key_func(mlx_key_data_t key, void *param)
 	t_env	*env;
 
 	env = param;
-	if (key.action == MLX_PRESS)
-	{
-		if (key.key == MLX_KEY_RIGHT || key.key == MLX_KEY_LEFT)
-			rotate(key, env);
-		else if (key.key == MLX_KEY_A)
-			player_move_left(env);
-		else if (key.key == MLX_KEY_D)
-			player_move_right(env);
-		else if (key.key == MLX_KEY_W)
-			player_move_forward(env);
-		else if (key.key == MLX_KEY_S)
-			player_move_back(env);
-		else if (key.key == MLX_KEY_ESCAPE)
-			mlx_close_window(env->mlx);
-	}
+	if (key.key == MLX_KEY_RIGHT || key.key == MLX_KEY_LEFT)
+		rotate(key, env);
+	else if (key.key == MLX_KEY_A)
+		player_move_left(env);
+	else if (key.key == MLX_KEY_D)
+		player_move_right(env);
+	else if (key.key == MLX_KEY_W)
+		player_move_forward(env);
+	else if (key.key == MLX_KEY_S)
+		player_move_back(env);
+	else if (key.key == MLX_KEY_ESCAPE)
+		mlx_close_window(env->mlx);
 }
 
 void	set_game(void *param)
@@ -55,13 +63,7 @@ void	set_game(void *param)
 	t_env	*env;
 
 	env = param;
-	//y = 0;
-	//pixels = (uint32_t *)env->img->pixels;
-	if (env->draw)
-	{
-		ft_run_dda(env);
-		env->draw = 0;
-	}
+	ft_run_dda(env);
 }
 
 void	close_func(void *param)

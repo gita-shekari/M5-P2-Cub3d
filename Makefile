@@ -42,21 +42,21 @@ else ifeq ($(OS), Darwin)
 endif
 #CFLAGS and MLXFLAGS with the last one for because of the -lglfw: link to the library file (?), is dedicated for 13.0 or older, but mine mac os is 15.0. so it has warning. Also the for the lglfw, ass -L/opt/homebrew/lib is to tell the linker to find it in such directory, instead of /user/local/lib.
 
-all: buildmlx buildlibft $(NAME)
+all: $(MLX_LIB) $(LIBFT) $(NAME)
 
-buildmlx:
+$(MLX_LIB):
 	git submodule update --init --recursive
-	cmake $(MLX_DIR) -B $(MLX_DIR)/build
-	cmake --build $(MLX_DIR)/build --parallel 4
+	@cmake $(MLX_DIR) -B $(MLX_DIR)/build
+	@cmake --build $(MLX_DIR)/build --parallel 4
 
-buildlibft:
+$(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
 
 %.o: %.c
 	@$(CC) $(CFLAGS) $(HEADERS) -c $< -o $@
 
 $(NAME): $(OBJ)
-	@$(CC) $(OBJ) $(MLX_LIB) $(LIBFT) $(MLXFLAGS) -o $@
+	$(CC) $(OBJ) $(MLX_LIB) $(LIBFT) $(MLXFLAGS) -o $@
 
 clean:
 	$(MAKE) -C $(LIBFT_DIR) clean
@@ -69,7 +69,9 @@ fclean: clean
 
 re: fclean all
 
-debug:fclean buildmlx buildlibft $(OBJ)
+debug:fclean buildlibft $(OBJ)
 	$(CC) $(OBJ) $(MLX_LIB) $(LIBFT) $(DEBUG_FLAGS) $(MLXFLAGS) -o $(NAME) -lm
 
-.PHONY: all, clean, fclean, re, buildmlx, buildlibft, debug
+.PHONY: all, clean, fclean, re, buildlibft, debug
+
+#https://github.com/codam-coding-college/MLX42.git

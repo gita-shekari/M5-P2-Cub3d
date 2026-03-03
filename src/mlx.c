@@ -1,62 +1,78 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   mlx.c                                              :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: gshekari <gshekari@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2026/02/18 14:54:03 by jdong         #+#    #+#                 */
+/*   Updated: 2026/02/20 17:49:10 by jdong         ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 void	player_move_forward(t_env *env)
 {
-	double newX;
-	double newY;
+	double	newx;
+	double	newy;
+	double	value;
 
-	newX = env->player.x + env->player.dirx;
-	newY = env->player.y + env->player.diry;
-	if (env->map.grid[(int)newY][(int)newX] == '0')
+	value = 0.2;
+	newx = env->player.x + env->player.dirx * value;
+	newy = env->player.y + env->player.diry * value;
+	if (env->map.grid[(int)newy][(int)newx] == '0')
 	{
-		env->player.x = newX;
-		env->player.y = newY;
-		env->draw = 1;
+		env->player.x = newx;
+		env->player.y = newy;
 	}
 }
 
 void	player_move_back(t_env *env)
 {
-	double newX;
-	double newY;
-	
-	newX = env->player.x - env->player.dirx;
-	newY = env->player.y - env->player.diry;
-	if (env->map.grid[(int)newY][(int)newX] == '0')
+	double	newx;
+	double	newy;
+	double	value;
+
+	value = 0.2;
+	newx = env->player.x - env->player.dirx * value;
+	newy = env->player.y - env->player.diry * value;
+	if (env->map.grid[(int)newy][(int)newx] == '0')
 	{
-		env->player.x = newX;
-		env->player.y = newY;
-		env->draw = 1;
+		env->player.x = newx;
+		env->player.y = newy;
 	}
 }
 
 void	player_move_right(t_env *env)
 {
-	double newX;
-	double newY;
+	double	newx;
+	double	newy;
+	double	value;
 
-	newX = env->player.x - env->player.diry;
-	newY = env->player.y + env->player.dirx;
-	if (env->map.grid[(int)newY][(int)newX] == '0')
+	value = 0.2;
+	newx = env->player.x - env->player.diry * value;
+	newy = env->player.y + env->player.dirx * value;
+	if (env->map.grid[(int)newy][(int)newx] == '0')
 	{
-		env->player.x = newX;
-		env->player.y = newY;
-		env->draw = 1;
+		env->player.x = newx;
+		env->player.y = newy;
 	}
 }
 
 void	player_move_left(t_env *env)
 {
-	double newX;
-	double newY;
-	
-	newX = env->player.x + env->player.diry;
-	newY = env->player.y - env->player.dirx;
-	if (env->map.grid[(int)newY][(int)newX] == '0')
+	double	newx;
+	double	newy;
+	double	value;
+
+	value = 0.2;
+	newx = env->player.x + env->player.diry * value;
+	newy = env->player.y - env->player.dirx * value;
+	if (env->map.grid[(int)newy][(int)newx] == '0')
 	{
-		env->player.x = newX;
-		env->player.y = newY;
-		env->draw = 1;
+		env->player.x = newx;
+		env->player.y = newy;
 	}
 }
 
@@ -84,5 +100,4 @@ void	rotate(mlx_key_data_t key, t_env *env)
 		}
 	}
 	set_player_plane(&(env->player));
-	env->draw = 1;
 }

@@ -1,12 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   draw.c                                             :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jdong <jdong@student.codam.nl>               +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2026/02/18 14:53:15 by jdong         #+#    #+#                 */
+/*   Updated: 2026/02/18 14:53:16 by jdong         ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
-static uint32_t color(t_rgb rgb)
+static	uint32_t	color(t_rgb rgb)
 {
 	return (
-		((uint32_t)rgb.R << 24) |
-		((uint32_t)rgb.G << 16) |
-		((uint32_t)rgb.B << 8)  |
-		(0xFF) 
+		((uint32_t)rgb.r << 24)
+		| ((uint32_t)rgb.g << 16)
+		| ((uint32_t)rgb.b << 8)
+		| (0xFF)
 	);
 }
 
@@ -27,13 +39,11 @@ static uint32_t	tex_color(mlx_texture_t *tex, double x, double y)
 	else if (j >= (int)tex->height)
 		j = (int)tex->height - 1;
 	tex_i = (j * tex->width + i) * 4;
-	//if (tex_i < 0 || tex_i >= (int)(tex->width * tex->height * 4))
-	//	printf("out of bounds %d, bound= %d, x = %f, y = %f\n", tex_i, (int)(tex->width * tex->height * 4), x, y);
 	return (
-		((uint32_t)tex->pixels[tex_i] << 24) |
-		((uint32_t)tex->pixels[tex_i + 1] << 16) |
-		((uint32_t)tex->pixels[tex_i + 2] << 8) |
-		((uint32_t)tex->pixels[tex_i + 3])
+		((uint32_t)tex->pixels[tex_i] << 24)
+		| ((uint32_t)tex->pixels[tex_i + 1] << 16)
+		| ((uint32_t)tex->pixels[tex_i + 2] << 8)
+		| ((uint32_t)tex->pixels[tex_i + 3])
 	);
 }
 
@@ -52,10 +62,12 @@ static mlx_texture_t	get_xpm_texture(t_side side, t_env *env)
 	return (env->xpm[xpm_idx]->texture);
 }
 /**
- * tex_y = 0 is when wall height is smaller then screen. But if wall is heigher then screen, we only display the parts of wall_top - screen_height / 2
+ * tex_y = 0 is when wall height is smaller then screen.
+ * 	But if wall is heigher then screen, we only display
+ * 	the parts of wall_top - screen_height / 2
  * y = [wall_top, wall_bottom] => tex_y = [0, texture_height];
  */
-	 
+
 static void	draw_texture(t_ray hit, t_env *env, int x)
 {
 	mlx_texture_t	tex;
@@ -74,7 +86,8 @@ static void	draw_texture(t_ray hit, t_env *env, int x)
 	tex_x = hit.wall_x * tex.width;
 	while (start <= end)
 	{
-		tex_y = (double)(start - hit.wall_top) * ((double)tex.height / (double)hit.wall_height);
+		tex_y = (double)(start - hit.wall_top)
+			*((double)tex.height / (double)hit.wall_height);
 		mlx_put_pixel(env->img, x, start, tex_color(&tex, tex_x, tex_y));
 		start++;
 	}

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   clean.c                                            :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jdong <jdong@student.codam.nl>               +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2026/02/18 14:52:51 by jdong         #+#    #+#                 */
+/*   Updated: 2026/02/18 14:52:54 by jdong         ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 void	free_charptr(char **ptr)
@@ -60,7 +72,7 @@ void	clean_bf_exit(t_env *env, int fd)
 {
 	if (!env)
 		return ;
-	if(env->map.grid)
+	if (env->map.grid)
 		free_split(env->map.grid);
 	free_tex(env->tex_path);
 	if (env->img)

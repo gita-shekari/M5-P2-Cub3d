@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   init_env.c                                         :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jdong <jdong@student.codam.nl>               +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2026/02/18 16:52:42 by jdong         #+#    #+#                 */
+/*   Updated: 2026/02/18 16:53:09 by jdong         ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 //while (line[i] == ' ' || line[i] =='\t')
 int	pass_spaces(char *line)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (ft_isspace(line[i]))
@@ -13,10 +25,10 @@ int	pass_spaces(char *line)
 
 static int	process_line(char *line, t_env *env, int i, int fd)
 {
-	char *cpy_line;
+	char	*cpy_line;
 
 	cpy_line = NULL;
-	if (line[i] == '1' || line[i] =='0')
+	if (line[i] == '1' || line[i] == '0')
 	{
 		cpy_line = ft_strdup(line);
 		if (!cpy_line)
@@ -41,7 +53,7 @@ int	init_env(int fd, t_env *env)
 	int		res;
 
 	line = get_next_line(fd);
-	if(!line)
+	if (!line)
 		return (0);
 	while (line)
 	{
@@ -60,5 +72,5 @@ int	init_env(int fd, t_env *env)
 		free_charptr(&line);
 		line = get_next_line(fd);
 	}
-	return (1);
+	return (validate_map(env));
 }
